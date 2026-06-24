@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WFH Equipment Request — CareCloud</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="unnamed.jpg">
+
+<style>
+:root {
+  --primary: #0f4c81;
+  --primary-light: #1a6db5;
+  --accent: #00c6a7;
+  --accent-dark: #00a389;
+  --danger: #e84545;
+  --warning: #f5a623;
+  --success: #27ae60;
+  --bg: #f0f4f9;
+  --card: #ffffff;
+  --border: #d6e0ed;
+  --text: #1a2233;
+  --muted: #6b7a99;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* TOP HEADER */
+.top-header {
+  background: var(--primary);
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 16px rgba(15,76,129,.18);
+}
+.brand-logo {
+  width: 38px; height: 38px; background: var(--accent); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 17px; color: #fff; flex-shrink: 0;
+}
+.brand-text h6 { font-size: 14px; font-weight: 700; color: #fff; margin: 0; }
+.brand-text small { font-size: 10.5px; color: rgba(255,255,255,.55); }
+.header-badge {
+  margin-left: auto; background: rgba(255,255,255,.12); color: rgba(255,255,255,.85);
+  border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,.2);
+}
+
+/* HERO STRIP */
+.hero-strip {
+  background: linear-gradient(135deg, var(--primary) 0%, #1a5a9a 100%);
+  color: #fff;
+  padding: 40px 32px 80px;
+  text-align: center;
+  position: relative;
+}
+.hero-strip h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.hero-strip p { font-size: 13.5px; opacity: .75; max-width: 480px; margin: 0 auto; }
+.hero-strip .ref-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,198,167,.18); border: 1px solid rgba(0,198,167,.35);
+  color: #00e8c2; border-radius: 20px; padding: 4px 14px;
+  font-size: 11.5px; font-weight: 600; margin-bottom: 16px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* STEPS BAR */
+.steps-wrapper {
+  max-width: 700px;
+  margin: -38px auto 0;
+  padding: 0 20px;
+  position: relative;
+  z-index: 10;
+}
+.steps-card {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(15,76,129,.12);
+  padding: 20px 28px;
+  display: flex;
+  align-items: flex-start;
+}
+.steps-bar { display: flex; align-items: center; width: 100%; }
+.step-item { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.step-row { display: flex; align-items: center; width: 100%; }
+.step-dot {
+  width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--muted); background: #fff; flex-shrink: 0;
+  transition: all .3s;
+}
+.step-dot.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+.step-dot.done { border-color: var(--accent); background: var(--accent); color: #fff; }
+.step-line { flex: 1; height: 2px; background: var(--border); margin: 0 6px; transition: background .3s; }
+.step-line.done { background: var(--accent); }
+.step-label { font-size: 10px; font-weight: 600; color: var(--muted); margin-top: 6px; text-align: center; white-space: nowrap; }
+.step-label.active-label { color: var(--primary); }
+
+/* MAIN CONTENT */
+.content-wrapper {
+  max-width: 700px;
+  margin: 24px auto 60px;
+  padding: 0 20px;
+}
+
+/* FORM CARD */
+.form-card {
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(15,76,129,.07);
+}
+.form-card-header {
+  background: var(--primary); color: #fff; padding: 22px 28px;
+}
+.form-card-header h5 { margin: 0; font-size: 16px; font-weight: 700; }
+.form-card-header p { margin: 5px 0 0; font-size: 12.5px; opacity: .7; }
+.form-card-body { padding: 28px; }
+
+.form-section-title {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--primary); margin-bottom: 16px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+}
+label { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
+.form-control, .form-select {
+  border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; font-family: 'Sora', sans-serif; transition: border-color .2s; width: 100%;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,76,129,.1); outline: none;
+}
+.required-star { color: var(--danger); margin-left: 2px; }
+
+/* DEVICE GRID */
+.device-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.device-item {
+  border: 2px solid var(--border); border-radius: 10px; padding: 14px 10px;
+  cursor: pointer; transition: all .2s; position: relative; user-select: none; text-align: center;
+}
+.device-item:hover { border-color: var(--primary-light); background: #f0f7ff; }
+.device-item.selected { border-color: var(--accent); background: #f0fdf9; }
+.device-icon { font-size: 24px; margin-bottom: 6px; }
+.device-name { font-size: 12px; font-weight: 600; color: var(--text); }
+.check-badge {
+  position: absolute; top: 7px; right: 7px; width: 18px; height: 18px;
+  background: var(--accent); border-radius: 50%; display: none;
+  align-items: center; justify-content: center; color: #fff; font-size: 10px;
+}
+.device-item.selected .check-badge { display: flex; }
+
+/* TABLE */
+.cc-table { width: 100%; border-collapse: collapse; }
+.cc-table th {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted); padding: 10px 14px; background: #f8fafd;
+  border-bottom: 1px solid var(--border); text-align: left;
+}
+.cc-table td { padding: 11px 14px; font-size: 13px; border-bottom: 1px solid #f0f3f8; vertical-align: middle; }
+.cc-table tr:last-child td { border-bottom: none; }
+
+/* BUTTONS */
+.btn-primary-cc {
+  background: var(--primary); color: #fff; border: none; padding: 11px 24px;
+  border-radius: 9px; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: all .2s; font-family: 'Sora', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary-cc:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(15,76,129,.25); }
+.btn-accent-cc {
+  background: var(--accent); color: #fff; border: none; padding: 11px 24px;
+  border-radius: 9px; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: all .2s; font-family: 'Sora', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-accent-cc:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,198,167,.3); }
+.btn-outline-cc {
+  background: transparent; color: var(--primary); border: 1.5px solid var(--primary);
+  padding: 11px 24px; border-radius: 9px; font-size: 13.5px; font-weight: 600;
+  cursor: pointer; transition: all .2s; font-family: 'Sora', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-outline-cc:hover { background: var(--primary); color: #fff; }
+
+/* SUCCESS STATE */
+.success-state {
+  text-align: center;
+  padding: 60px 28px;
+}
+.success-icon {
+  width: 80px; height: 80px; background: #e8f5e9; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; font-size: 36px; color: var(--success);
+}
+.success-state h3 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.success-state p { font-size: 13.5px; color: var(--muted); max-width: 400px; margin: 0 auto 24px; }
+.ref-box {
+  display: inline-block; background: #f0fdf9; border: 1.5px solid var(--accent);
+  border-radius: 10px; padding: 12px 24px; font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 28px;
+}
+
+/* TOAST */
+.toast-area {
+  position: fixed; top: 20px; right: 20px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.toast-msg {
+  background: #fff; border-radius: 10px; padding: 14px 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.15); border-left: 4px solid var(--accent);
+  display: flex; align-items: flex-start; gap: 12px; max-width: 320px;
+  animation: slideIn .3s ease;
+}
+.toast-msg.err { border-left-color: var(--danger); }
+@keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: none; opacity: 1; } }
+.toast-msg h6 { font-size: 13px; font-weight: 600; margin: 0; }
+
+/* INFO BOX */
+.info-box {
+  background: #fffbf0; border: 1.5px solid #f5c842; border-radius: 10px;
+  padding: 13px 16px; font-size: 12.5px; margin-bottom: 20px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center; padding: 24px; font-size: 11.5px; color: var(--muted);
+  border-top: 1px solid var(--border); background: var(--card);
+}
+
+/* STEP VISIBILITY */
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+
+@media (max-width: 540px) {
+  .hero-strip { padding: 30px 16px 70px; }
+  .hero-strip h2 { font-size: 19px; }
+  .steps-wrapper { padding: 0 12px; }
+  .steps-card { padding: 16px; }
+  .step-label { font-size: 9px; }
+  .content-wrapper { padding: 0 12px; }
+  .form-card-body { padding: 20px 16px; }
+  .device-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast-area" id="toast-area"></div>
+
+<!-- HEADER -->
+<header class="top-header">
+  <div class="brand-logo">CC</div>
+  <div class="brand-text">
+    <h6>CareCloud Colombo(PVT)Ltd</h6>
+    <small>IT Asset Handover System</small>
+  </div>
+  <div class="header-badge"><i class="fas fa-laptop-house me-1"></i>WFH Equipment Request</div>
+</header>
+
+<!-- HERO -->
+<div class="hero-strip">
+  <div class="ref-chip" id="ref-chip" style="display:none"><i class="fas fa-hashtag"></i><span id="ref-display"></span></div>
+  <h2><i class="fas fa-laptop-house me-2" style="color:var(--accent)"></i>WFH Equipment Request</h2>
+  <p>Fill in the form below to request IT equipment for working from home. Your manager will be notified for approval.</p>
+</div>
+
+<!-- STEPS -->
+<div class="steps-wrapper">
+  <div class="steps-card">
+    <div class="steps-bar">
+      <div class="step-item">
+        <div class="step-row">
+          <div class="step-dot active" id="sdot-1">1</div>
+          <div class="step-line" id="sline-1"></div>
+        </div>
+        <div class="step-label active-label" id="slabel-1">My Details</div>
+      </div>
+      <div class="step-item">
+        <div class="step-row">
+          <div class="step-dot" id="sdot-2">2</div>
+          <div class="step-line" id="sline-2"></div>
+        </div>
+        <div class="step-label" id="slabel-2">Equipment</div>
+      </div>
+      <div class="step-item">
+        <div class="step-row">
+          <div class="step-dot" id="sdot-3">3</div>
+          <div class="step-line" id="sline-3"></div>
+        </div>
+        <div class="step-label" id="slabel-3">Manager</div>
+      </div>
+      <div class="step-item">
+        <div class="step-row">
+          <div class="step-dot" id="sdot-4">4</div>
+        </div>
+        <div class="step-label" id="slabel-4">Review</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content-wrapper">
+
+  <!-- STEP 1 – Employee Info -->
+  <div class="step-panel active" id="panel-1">
+    <div class="form-card">
+      <div class="form-card-header">
+        <h5><i class="fas fa-user me-2"></i>Your Information</h5>
+        <p>Please provide your personal and employment details</p>
+      </div>
+      <div class="form-card-body">
+        <div class="form-section-title">Personal Details</div>
+        <div class="row g-3 mb-4">
+
+          <!-- FULL NAME with autocomplete -->
+          <div class="col-md-6">
+            <label>Full Name <span class="required-star">*</span></label>
+            <div style="position:relative">
+              <input type="text" class="form-control" id="emp-name"
+                placeholder="Start typing your name..."
+                autocomplete="off"
+                oninput="handleNameInput()"
+                onkeydown="handleNameKeydown(event)">
+              <div id="name-suggestions" style="
+                display:none;position:absolute;top:100%;left:0;right:0;z-index:999;
+                background:#fff;border:1.5px solid var(--primary);border-top:none;
+                border-radius:0 0 10px 10px;box-shadow:0 8px 24px rgba(15,76,129,.15);
+                max-height:220px;overflow-y:auto;"></div>
+            </div>
+          </div>
+
+          <!-- EMPLOYEE NO — auto-filled, still editable -->
+          <div class="col-md-6">
+            <label>Employee No <span class="required-star">*</span></label>
+            <div style="position:relative">
+              <input type="text" class="form-control" id="emp-no" placeholder="Auto-filled after selecting name"
+                style="padding-right:36px">
+              <span id="emp-no-lock" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:13px;display:none">
+                <i class="fas fa-check-circle"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- EMAIL — auto-filled, still editable -->
+          <div class="col-md-6">
+            <label>Email Address <span class="required-star">*</span></label>
+            <div style="position:relative">
+              <input type="email" class="form-control" id="emp-email" placeholder="Auto-filled after selecting name"
+                style="padding-right:36px">
+              <span id="emp-email-lock" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:13px;display:none">
+                <i class="fas fa-check-circle"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label>Department <span class="required-star">*</span></label>
+            <select class="form-select" id="emp-dept">
+              <option value="">Select Department</option>
+              <option>BI</option>
+              <option>Billing</option>
+              <option>Posting</option>
+              <option>Collection</option>
+              <option>HR</option>
+              <option>Finance</option>
+              <option>IT</option>
+              <option>Operations</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label>WFH Start Date <span class="required-star">*</span></label>
+            <input type="date" class="form-control" id="emp-wfh-date">
+          </div>
+
+          <!-- HANDOVER BY — dropdown -->
+          <div class="col-md-6">
+            <label>Handover By (IT Officer)</label>
+            <select class="form-select" id="emp-handover-by">
+              <option value="">Select IT Officer</option>
+              <option>Kasun Saranga</option>
+              <option>Muhammath Hajmal</option>
+              <option>Rameyan Thurairasa</option>
+            </select>
+          </div>
+
+        </div>
+        <div class="d-flex justify-content-end">
+          <button class="btn-primary-cc" onclick="goStep(2)">
+            Next: Select Equipment <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 – Device Selection -->
+  <div class="step-panel" id="panel-2">
+    <div class="form-card">
+      <div class="form-card-header">
+        <h5><i class="fas fa-laptop me-2"></i>Select Equipment</h5>
+        <p>Tap to select the devices you need for working from home</p>
+      </div>
+      <div class="form-card-body">
+        <div class="info-box">
+          <i class="fas fa-info-circle" style="color:#e6a800;margin-top:2px"></i>
+          <span>Select all the equipment you require. You can edit serial numbers if known.</span>
+        </div>
+        <div class="form-section-title">Available Equipment</div>
+        <div class="device-grid" id="device-picker"></div>
+
+        <div class="form-section-title">Selected Items & Serial Numbers</div>
+        <div id="selected-devices-list">
+          <p style="font-size:13px;color:var(--muted);padding:10px 0">No items selected yet. Tap equipment above to add.</p>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <button class="btn-outline-cc" onclick="goStep(1)">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button class="btn-primary-cc" onclick="goStep(3)">
+            Next: Manager <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 – Manager -->
+  <div class="step-panel" id="panel-3">
+    <div class="form-card">
+      <div class="form-card-header">
+        <h5><i class="fas fa-user-tie me-2"></i>Manager Approval</h5>
+        <p>Select your manager — they will receive an email to approve this request</p>
+      </div>
+      <div class="form-card-body">
+        <div class="form-section-title">Manager Details</div>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label>Manager Name <span class="required-star">*</span></label>
+            <select class="form-select" id="mgr-name" onchange="fillMgrEmail()">
+              <option value="">Select Your Manager</option>
+              <option data-email="vijithw@carecloud.com">Vijith Shenal</option>
+              <option data-email="krishan.gunasinghe@carecloud.com">Krishan Gunasinghe</option>
+              <option data-email="Sureshw@carecloud.com">Suresh Wignarajah</option>
+              <option data-email="achini.ponnamperuma@carecloud.com">Achini Ponnamperuma</option>
+              <option data-email="steffony.jeyaseelan@carecloud.com">Steffony Jeyaseelan</option>
+              <option data-email="Mohamed.Musharraf@carecloud.com">Mohamed Musharraf</option>
+              <option data-email="mohamed.ziyard@carecloud.com">Mohamed Ziyard</option>
+              <option data-email="asanka.weerasekara@carecloud.com">Asanka Weerasekara</option>
+              <option data-email="Pasindu.Madushan@carecloud.com">Pasindu Madushan</option>
+              <option data-email="Muhammath.Hajmal@carecloud.com">Muhammath Hajmal</option>
+
+              
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label>Manager Email</label>
+            <input type="email" class="form-control" id="mgr-email" placeholder="Auto-filled" readonly style="background:#f8fafd;color:var(--muted)">
+          </div>
+          <div class="col-12">
+            <label>Additional Notes <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+            <textarea class="form-control" id="req-notes" rows="3" placeholder="Any special requirements or context for your manager..."></textarea>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <button class="btn-outline-cc" onclick="goStep(2)">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button class="btn-primary-cc" onclick="goStep(4)">
+            Review Request <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 – Review & Submit -->
+  <div class="step-panel" id="panel-4">
+    <div class="form-card">
+      <div class="form-card-header">
+        <h5><i class="fas fa-clipboard-check me-2"></i>Review & Submit</h5>
+        <p>Please review your request before submitting</p>
+      </div>
+      <div class="form-card-body" id="review-body">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 – Success -->
+  <div class="step-panel" id="panel-success">
+    <div class="form-card">
+      <div class="success-state">
+        <div class="success-icon"><i class="fas fa-check"></i></div>
+        <h3>Request Submitted!</h3>
+        <p>Your WFH equipment request has been sent to your manager for approval. You'll receive a confirmation email shortly.</p>
+        <div class="ref-box" id="success-ref">—</div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+          <div style="background:#f0f4f9;border-radius:10px;padding:16px 20px;max-width:380px;width:100%;font-size:12.5px;text-align:left">
+            <div style="font-weight:700;margin-bottom:10px;font-size:13px;color:var(--primary)"><i class="fas fa-list-check me-2"></i>What happens next?</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="background:var(--accent);color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">1</span>
+                <span style="color:var(--muted)">Your manager receives an approval email</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="background:var(--accent);color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">2</span>
+                <span style="color:var(--muted)">IT team prepares your equipment</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start">
+                <span style="background:var(--accent);color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">3</span>
+                <span style="color:var(--muted)">Equipment handed over on your WFH start date</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-outline-cc" onclick="resetForm()" style="margin-top:8px">
+            <i class="fas fa-plus"></i> Submit Another Request
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-wrapper -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <i class="fas fa-shield-alt me-1"></i> CareCloud Colombo(PVT)Ltd — IT Department &nbsp;|&nbsp; For assistance contact <strong>itteamcmb@carecloud.com</strong>
+</footer>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script>
+// ===== DEVICE TYPES =====
+const DEVICE_TYPES = [
+  {name:'Laptop', icon:'💻'},
+  {name:'Laptop Charger', icon:'🔌'},
+  {name:'WiFi Router with SIM', icon:'📡'},
+  {name:'Mouse', icon:'🖱️'},
+  {name:'Keyboard', icon:'⌨️'},
+  {name:'Laptop Bag', icon:'🎒'},
+  {name:'Monitor', icon:'🖥️'},
+  {name:'HDMI Cable', icon:'🔗'},
+  {name:'Headset', icon:'🎧'},
+];
+
+let selectedDevices = {};
+let currentStep = 1;
+
+// ===== STEP NAVIGATION =====
+function goStep(n) {
+  // Validate before moving forward
+  if (n > 1) {
+    const nm = document.getElementById('emp-name').value.trim();
+    const no = document.getElementById('emp-no').value.trim();
+    const em = document.getElementById('emp-email').value.trim();
+    const dp = document.getElementById('emp-dept').value;
+    const dt = document.getElementById('emp-wfh-date').value;
+    if (!nm||!no||!em||!dp||!dt) {
+      toast('Please fill in all required fields','err'); return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+      toast('Please enter a valid email address','err'); return;
+    }
+  }
+  if (n > 2 && Object.keys(selectedDevices).length === 0) {
+    toast('Please select at least one item','err'); return;
+  }
+  if (n > 3) {
+    const mn = document.getElementById('mgr-name').value;
+    if (!mn) { toast('Please select your manager','err'); return; }
+  }
+
+  // Hide all panels
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`panel-${n}`).classList.add('active');
+
+  // Update step dots
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById(`sdot-${i}`);
+    const label = document.getElementById(`slabel-${i}`);
+    dot.classList.remove('active','done');
+    label.classList.remove('active-label');
+    if (i < n) {
+      dot.classList.add('done');
+      dot.innerHTML = '<i class="fas fa-check" style="font-size:10px"></i>';
+    } else if (i === n) {
+      dot.classList.add('active');
+      dot.textContent = i;
+      label.classList.add('active-label');
+    } else {
+      dot.textContent = i;
+    }
+    if (i < 4) {
+      document.getElementById(`sline-${i}`).classList.toggle('done', i < n);
+    }
+  }
+
+  currentStep = n;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+
+  if (n === 2) renderDevicePicker();
+  if (n === 4) renderReview();
+}
+
+// ===== DEVICE PICKER =====
+function renderDevicePicker() {
+  document.getElementById('device-picker').innerHTML = DEVICE_TYPES.map(d => {
+    const selected = selectedDevices[d.name] !== undefined;
+    return `<div class="device-item ${selected?'selected':''}" onclick="toggleDevice('${d.name}')">
+      <div class="device-icon">${d.icon}</div>
+      <div class="device-name">${d.name}</div>
+      <div class="check-badge"><i class="fas fa-check"></i></div>
+    </div>`;
+  }).join('');
+  renderSelectedList();
+}
+
+function toggleDevice(name) {
+  if (selectedDevices[name] !== undefined) {
+    delete selectedDevices[name];
+  } else {
+    selectedDevices[name] = '';
+  }
+  renderDevicePicker();
+}
+
+function renderSelectedList() {
+  const keys = Object.keys(selectedDevices);
+  const list = document.getElementById('selected-devices-list');
+  if (!keys.length) {
+    list.innerHTML = `<p style="font-size:13px;color:var(--muted);padding:10px 0">No items selected yet. Tap equipment above to add.</p>`;
+    return;
+  }
+  list.innerHTML = `<div style="overflow-x:auto">
+    <table class="cc-table" style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <thead><tr><th>#</th><th>Item</th><th>Serial No <span style="font-weight:400;text-transform:none;font-size:10px">(if known)</span></th><th></th></tr></thead>
+      <tbody>${keys.map((k,i)=>`<tr>
+        <td style="color:var(--muted);font-weight:700;font-family:'JetBrains Mono',monospace">${String(i+1).padStart(2,'0')}</td>
+        <td style="font-weight:600">${k}</td>
+        <td><input type="text" value="${selectedDevices[k]}" onchange="selectedDevices['${k}']=this.value"
+          placeholder="Leave blank if unknown"
+          style="border:1.5px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;font-family:'JetBrains Mono',monospace;width:100%;min-width:140px"></td>
+        <td><button onclick="toggleDevice('${k}')" style="background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px"><i class="fas fa-times-circle"></i></button></td>
+      </tr>`).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+// ===== MANAGER EMAIL =====
+function fillMgrEmail() {
+  const sel = document.getElementById('mgr-name');
+  const opt = sel.options[sel.selectedIndex];
+  document.getElementById('mgr-email').value = opt.dataset.email || '';
+}
+
+// ===== REVIEW =====
+function renderReview() {
+  const name  = document.getElementById('emp-name').value;
+  const no    = document.getElementById('emp-no').value;
+  const email = document.getElementById('emp-email').value;
+  const dept  = document.getElementById('emp-dept').value;
+  const date  = document.getElementById('emp-wfh-date').value;
+  const hby   = document.getElementById('emp-handover-by').value;
+  const mgr   = document.getElementById('mgr-name').value;
+  const mgrEmail = document.getElementById('mgr-email').value;
+  const notes = document.getElementById('req-notes').value;
+  const devKeys = Object.keys(selectedDevices);
+
+  const ref = 'REQ-' + Date.now().toString().slice(-6);
+  window._pendingRef = ref;
+  window._pendingData = { ref, name, no, email, dept, date, hby, mgr, mgrEmail, notes, devices: {...selectedDevices}, status:'pending', submitted: new Date().toISOString() };
+
+  // Show ref chip in hero
+  document.getElementById('ref-chip').style.display = 'inline-flex';
+  document.getElementById('ref-display').textContent = ref;
+
+  document.getElementById('review-body').innerHTML = `
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <div class="form-section-title">Your Details</div>
+        <table style="width:100%;font-size:13px">
+          <tr><td style="color:var(--muted);padding:5px 0;width:130px">Full Name</td><td style="font-weight:600">${name}</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0">Employee No</td><td style="font-weight:600">${no}</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0">Email</td><td style="font-size:12.5px">${email}</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0">Department</td><td>${dept}</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0">WFH Date</td><td>${date}</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0">Handover By</td><td>${hby}</td></tr>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <div class="form-section-title">Manager Approval</div>
+        <table style="width:100%;font-size:13px">
+          <tr><td style="color:var(--muted);padding:5px 0;width:130px">Manager</td><td style="font-weight:600">${mgr}</td></tr>
+          <tr><td style="color:var(--muted);padding:5px 0">Email</td><td style="font-size:12.5px">${mgrEmail}</td></tr>
+        </table>
+        ${notes ? `<div class="mt-3"><div class="form-section-title">Notes</div><p style="font-size:13px;color:var(--muted)">${notes}</p></div>` : ''}
+      </div>
+    </div>
+
+    <div class="form-section-title">Requested Equipment (${devKeys.length} item${devKeys.length>1?'s':''})</div>
+    <table class="cc-table" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:22px">
+      <thead><tr><th>#</th><th>Item</th><th>Serial No</th></tr></thead>
+      <tbody>${devKeys.map((k,i)=>`<tr>
+        <td style="color:var(--muted);font-weight:700;font-family:'JetBrains Mono',monospace">${String(i+1).padStart(2,'0')}</td>
+        <td style="font-weight:600">${k}</td>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">${selectedDevices[k]||'—'}</td>
+      </tr>`).join('')}</tbody>
+    </table>
+
+    <div style="background:#f0fdf9;border:1.5px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:12.5px;line-height:1.6">
+      <i class="fas fa-envelope me-2" style="color:var(--accent)"></i>
+      Submitting will notify <strong>${mgr}</strong> (<span style="font-family:'JetBrains Mono',monospace">${mgrEmail}</span>) to approve this request.
+    </div>
+
+    <div style="background:#f8fafd;border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:12px;color:var(--muted);line-height:1.7">
+      By submitting this form, I acknowledge that I will be responsible for the safe keeping of all equipment issued to me by <strong style="color:var(--text)">CareCloud Colombo (PVT) Ltd</strong>.
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button class="btn-outline-cc" onclick="goStep(3)">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <button class="btn-accent-cc" onclick="submitRequest()">
+        <i class="fas fa-paper-plane"></i> Submit Request
+      </button>
+    </div>
+  `;
+}
+
+// ===== API =====
+const API_BASE = `${window.location.protocol}//${window.location.hostname}:3000/api`;
+
+// ===== EMAIL HELPERS =====
+function buildITTeamNewRequestEmail(r) {
+  return `
+  <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:620px;margin:0 auto;background:#f0f4f9;padding:24px">
+    <div style="background:#0f4c81;border-radius:12px 12px 0 0;padding:28px 32px;display:flex;align-items:center;gap:14px">
+      <div style="background:#00c6a7;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0">CC</div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:16px">CareCloud Colombo (PVT) Ltd</div>
+        <div style="color:rgba(255,255,255,.6);font-size:12px">IT Asset Handover System — IT Team Notification</div>
+      </div>
+    </div>
+    <div style="background:#fff;padding:32px;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(15,76,129,.08)">
+      <div style="background:#e3f2fd;border-left:4px solid #1565c0;border-radius:6px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#1565c0">
+        <strong>📋 New WFH Request Submitted</strong> — Pending manager approval before preparation.
+      </div>
+      <h2 style="font-size:18px;font-weight:700;color:#1a2233;margin:0 0 4px">New Request — ${r.ref}</h2>
+      <p style="color:#6b7a99;font-size:13px;margin:0 0 24px">Submitted: ${new Date(r.submitted).toLocaleString('en-GB',{dateStyle:'long',timeStyle:'short'})}</p>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+        <tr style="background:#f8fafd"><td colspan="2" style="padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f4c81;border-bottom:2px solid #00c6a7">Request Details</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;width:140px;border-bottom:1px solid #f0f4f8">Employee</td><td style="padding:9px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #f0f4f8">${r.name} (${r.no})</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Department</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${r.dept}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">WFH Start Date</td><td style="padding:9px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #f0f4f8">${r.date}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Manager</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${r.mgr}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px">Equipment</td><td style="padding:9px 14px;font-weight:600;font-size:13px">${Object.keys(r.devices).join(', ')}</td></tr>
+      </table>
+      <div style="background:#f0f4f9;border-radius:10px;padding:14px 18px;font-size:13px;color:#6b7a99;margin-bottom:8px">
+        <i class="fas fa-info-circle" style="color:#1565c0"></i> Monitor this request via the <strong style="color:#1a2233">IT Dashboard</strong>. Equipment preparation can begin once the manager approves.
+      </div>
+      <p style="font-size:11.5px;color:#6b7a99;margin:16px 0 0;text-align:center">CareCloud Colombo (PVT) Ltd — IT Department &nbsp;|&nbsp;  itteamcmb@carecloud.com</p>
+    </div>
+  </div>`;
+}
+
+function buildITTeamApprovedEmail(r) {
+  return `
+  <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:620px;margin:0 auto;background:#f0f4f9;padding:24px">
+    <div style="background:#0f4c81;border-radius:12px 12px 0 0;padding:28px 32px;display:flex;align-items:center;gap:14px">
+      <div style="background:#00c6a7;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0">CC</div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:16px">CareCloud Colombo (PVT) Ltd</div>
+        <div style="color:rgba(255,255,255,.6);font-size:12px">IT Asset Handover System — IT Team Notification</div>
+      </div>
+    </div>
+    <div style="background:#fff;padding:32px;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(15,76,129,.08)">
+      <div style="background:#e8f5e9;border-left:4px solid #27ae60;border-radius:6px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#1b5e20">
+        <strong>✅ Manager Approved</strong> — Please prepare and arrange equipment handover for this employee.
+      </div>
+      <h2 style="font-size:18px;font-weight:700;color:#1a2233;margin:0 0 4px">Prepare Equipment — ${r.ref}</h2>
+      <p style="color:#6b7a99;font-size:13px;margin:0 0 24px">Approved by <strong>${r.mgr}</strong></p>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+        <tr style="background:#f8fafd"><td colspan="2" style="padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f4c81;border-bottom:2px solid #00c6a7">Handover Details</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;width:140px;border-bottom:1px solid #f0f4f8">Employee</td><td style="padding:9px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #f0f4f8">${r.name} (${r.no})</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Department</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${r.dept}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">WFH Start Date</td><td style="padding:9px 14px;font-weight:700;font-size:13px;color:#e84545;border-bottom:1px solid #f0f4f8">${r.date}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Handover By</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${r.hby || '—'}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px">Equipment</td><td style="padding:9px 14px;font-weight:600;font-size:13px">${Object.keys(r.devices).join(', ')}</td></tr>
+      </table>
+      <div style="background:#fff3e0;border:1.5px solid #f5a623;border-radius:10px;padding:14px 18px;font-size:13px;color:#7a5c00;margin-bottom:8px">
+        ⚡ <strong>Action Required:</strong> Mark as "Handed Over" in the IT Dashboard once equipment is given to the employee.
+      </div>
+      <p style="font-size:11.5px;color:#6b7a99;margin:16px 0 0;text-align:center">CareCloud Colombo (PVT) Ltd — IT Department &nbsp;|&nbsp; itteamcmb@carecloud.com</p>
+    </div>
+  </div>`;
+}
+
+function buildDeviceRows(devices) {
+  return Object.entries(devices).map(([name, serial], i) => `
+    <tr>
+      <td style="padding:8px 14px;border-bottom:1px solid #eef2f8;color:#6b7a99;font-family:monospace;font-weight:700">${String(i+1).padStart(2,'0')}</td>
+      <td style="padding:8px 14px;border-bottom:1px solid #eef2f8;font-weight:600">${name}</td>
+      <td style="padding:8px 14px;border-bottom:1px solid #eef2f8;font-family:monospace;color:#6b7a99">${serial || '—'}</td>
+    </tr>`).join('');
+}
+
+function buildManagerEmail(r, approveLink) {
+  return `
+  <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:620px;margin:0 auto;background:#f0f4f9;padding:24px">
+    <div style="background:#0f4c81;border-radius:12px 12px 0 0;padding:28px 32px;display:flex;align-items:center;gap:14px">
+      <div style="background:#00c6a7;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0">CC</div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:16px">CareCloud Colombo (PVT) Ltd</div>
+        <div style="color:rgba(255,255,255,.6);font-size:12px">IT Asset Handover System</div>
+      </div>
+      <div style="margin-left:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;color:rgba(255,255,255,.85);font-size:11px;font-weight:600">WFH Equipment Request</div>
+    </div>
+    <div style="background:#fff;padding:32px;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(15,76,129,.08)">
+      <div style="background:#fff8e6;border-left:4px solid #f5a623;border-radius:6px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#7a5c00">
+        <strong>Action Required:</strong> An employee has submitted a WFH equipment request requiring your approval.
+      </div>
+      <h2 style="font-size:20px;font-weight:700;color:#1a2233;margin:0 0 4px">New WFH Request — ${r.ref}</h2>
+      <p style="color:#6b7a99;font-size:13px;margin:0 0 24px">Submitted: ${new Date(r.submitted).toLocaleString('en-GB', {dateStyle:'long',timeStyle:'short'})}</p>
+
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+        <tr style="background:#f8fafd">
+          <td colspan="2" style="padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f4c81;border-bottom:2px solid #00c6a7">Employee Details</td>
+        </tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;width:140px;border-bottom:1px solid #f0f4f8">Full Name</td><td style="padding:9px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #f0f4f8">${r.name}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Employee No</td><td style="padding:9px 14px;font-weight:600;font-size:13px;font-family:monospace;border-bottom:1px solid #f0f4f8">${r.no}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Email</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${r.email}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Department</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${r.dept}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">WFH Start Date</td><td style="padding:9px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #f0f4f8">${r.date}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px">Handover By</td><td style="padding:9px 14px;font-size:13px">${r.hby || '—'}</td></tr>
+      </table>
+
+      <table style="width:100%;border-collapse:collapse;margin-bottom:28px">
+        <thead>
+          <tr style="background:#f8fafd">
+            <td colspan="3" style="padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f4c81;border-bottom:2px solid #00c6a7">Requested Equipment (${Object.keys(r.devices).length} item${Object.keys(r.devices).length>1?'s':''})</td>
+          </tr>
+          <tr style="background:#f8fafd">
+            <th style="padding:8px 14px;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#6b7a99;text-align:left;border-bottom:1px solid #eef2f8">#</th>
+            <th style="padding:8px 14px;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#6b7a99;text-align:left;border-bottom:1px solid #eef2f8">Item</th>
+            <th style="padding:8px 14px;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#6b7a99;text-align:left;border-bottom:1px solid #eef2f8">Serial No</th>
+          </tr>
+        </thead>
+        <tbody>${buildDeviceRows(r.devices)}</tbody>
+      </table>
+
+      ${r.notes ? `<div style="background:#f8fafd;border-radius:8px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#6b7a99"><strong style="color:#1a2233">Notes:</strong> ${r.notes}</div>` : ''}
+
+      <!-- APPROVE BUTTON -->
+      <div style="text-align:center;margin-bottom:24px">
+        <a href="${approveLink}" style="display:inline-block;background:#27ae60;color:#fff;text-decoration:none;padding:16px 40px;border-radius:10px;font-size:15px;font-weight:700;letter-spacing:.3px;box-shadow:0 4px 14px rgba(39,174,96,.35)">
+          ✅ &nbsp; Review &amp; Approve Request
+        </a>
+        <div style="margin-top:10px;font-size:11.5px;color:#6b7a99">Click to open the Manager Approval Portal for <strong>${r.ref}</strong></div>
+        <div style="margin-top:6px;font-size:10.5px;color:#aab2c8;word-break:break-all">${approveLink}</div>
+      </div>
+
+      <p style="font-size:11.5px;color:#6b7a99;margin:0;text-align:center">CareCloud Colombo (PVT) Ltd — IT Department &nbsp;|&nbsp; itteamcmb@carecloud.com</p>
+    </div>
+  </div>`;
+}
+
+function buildEmployeeEmail(r) {
+  return `
+  <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:620px;margin:0 auto;background:#f0f4f9;padding:24px">
+    <div style="background:#0f4c81;border-radius:12px 12px 0 0;padding:28px 32px;display:flex;align-items:center;gap:14px">
+      <div style="background:#00c6a7;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0">CC</div>
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:16px">CareCloud Colombo (PVT) Ltd</div>
+        <div style="color:rgba(255,255,255,.6);font-size:12px">IT Asset Handover System</div>
+      </div>
+    </div>
+    <div style="background:#fff;padding:32px;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(15,76,129,.08)">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="width:64px;height:64px;background:#e8f5e9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px">✅</div>
+        <h2 style="font-size:20px;font-weight:700;color:#1a2233;margin:0 0 6px">Request Submitted Successfully</h2>
+        <p style="color:#6b7a99;font-size:13.5px;margin:0">Hi <strong>${r.name}</strong>, your WFH equipment request has been received.</p>
+      </div>
+      <div style="background:#f0f4f9;border-radius:10px;padding:14px 20px;text-align:center;margin-bottom:24px">
+        <div style="font-size:11px;color:#6b7a99;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:4px">Reference Number</div>
+        <div style="font-size:20px;font-weight:800;color:#0f4c81;font-family:monospace">${r.ref}</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+        <tr style="background:#f8fafd">
+          <td colspan="2" style="padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f4c81;border-bottom:2px solid #00c6a7">Your Request Summary</td>
+        </tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;width:140px;border-bottom:1px solid #f0f4f8">Department</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${r.dept}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">WFH Start Date</td><td style="padding:9px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #f0f4f8">${r.date}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Manager Notified</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${r.mgr}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px">Items Requested</td><td style="padding:9px 14px;font-weight:600;font-size:13px">${Object.keys(r.devices).join(', ')}</td></tr>
+      </table>
+      <div style="background:#f0fdf9;border:1.5px solid #00c6a7;border-radius:10px;padding:16px 20px;margin-bottom:24px">
+        <div style="font-size:13px;font-weight:700;color:#1a2233;margin-bottom:10px">What happens next?</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#6b7a99">
+            <span style="background:#00c6a7;color:#fff;border-radius:50%;width:20px;height:20px;min-width:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">1</span>
+            Your manager (<strong style="color:#1a2233">${r.mgr}</strong>) will review and approve your request
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#6b7a99">
+            <span style="background:#00c6a7;color:#fff;border-radius:50%;width:20px;height:20px;min-width:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">2</span>
+            IT team prepares your equipment
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#6b7a99">
+            <span style="background:#00c6a7;color:#fff;border-radius:50%;width:20px;height:20px;min-width:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">3</span>
+            Equipment handed over on your WFH start date
+          </div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;color:#6b7a99;margin:0;text-align:center">CareCloud Colombo (PVT) Ltd — IT Department &nbsp;|&nbsp; itteamcmb@carecloud.com</p>
+    </div>
+  </div>`;
+}
+
+// ===== SUBMIT =====
+async function submitRequest() {
+  const r = window._pendingData;
+  const submitBtn = document.querySelector('[onclick="submitRequest()"]');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Submitting...'; }
+
+  // Build approve link — uses current page origin (works with IIS, any port)
+  const token = btoa(r.mgrEmail);
+  const approveLink = `${window.location.origin}/manager-approval.html?ref=${encodeURIComponent(r.ref)}&token=${encodeURIComponent(token)}`;
+
+  try {
+    // 1. Save request to DB
+    const saveRes = await fetch(`${API_BASE}/requests`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(r)
+    });
+    if (!saveRes.ok) throw new Error('Server error saving request');
+
+    // 2. Log activity
+    await fetch(`${API_BASE}/activities`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ msg: `New WFH request from ${r.name} (${r.dept})`, type: 'new', time: new Date().toISOString() })
+    });
+
+    // 3. Send email to Manager (with approve link button)
+    await fetch(`${API_BASE}/sendmail`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: r.mgrEmail,
+        subject: `[Action Required] WFH Equipment Request — ${r.name} (${r.ref})`,
+        html: buildManagerEmail(r, approveLink)
+      })
+    });
+
+    // 4. Send confirmation email to Employee
+    await fetch(`${API_BASE}/sendmail`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: r.email,
+        subject: `Your WFH Equipment Request Has Been Submitted — ${r.ref}`,
+        html: buildEmployeeEmail(r)
+      })
+    });
+
+    // 5. Notify IT Team of new request
+    await fetch(`${API_BASE}/sendmail`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: 'itteamcmb@carecloud.com',
+        subject: `[New Request] WFH Equipment Request — ${r.name} (${r.ref})`,
+        html: buildITTeamNewRequestEmail(r)
+      })
+    });
+
+    // Show success screen
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-success').classList.add('active');
+    document.getElementById('success-ref').textContent = r.ref;
+
+    for (let i = 1; i <= 4; i++) {
+      const dot = document.getElementById(`sdot-${i}`);
+      dot.classList.remove('active');
+      dot.classList.add('done');
+      dot.innerHTML = '<i class="fas fa-check" style="font-size:10px"></i>';
+      const label = document.getElementById(`slabel-${i}`);
+      label.classList.remove('active-label');
+      if (i < 4) document.getElementById(`sline-${i}`).classList.add('done');
+    }
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    toast(`Request ${r.ref} submitted! Emails sent to manager and you. ✓`);
+
+  } catch(e) {
+    console.error('Submission failed:', e);
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Request'; }
+    toast('Could not submit request. Ensure Node server is running on port 3000.', 'err');
+  }
+}
+
+// ===== RESET =====
+function resetForm() {
+  selectedDevices = {};
+  ['emp-name','emp-no','emp-email','emp-wfh-date','mgr-email','req-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('emp-dept').value = '';
+  document.getElementById('emp-handover-by').value = '';
+  document.getElementById('mgr-name').value = '';
+  document.getElementById('ref-chip').style.display = 'none';
+  document.getElementById('emp-no-lock').style.display = 'none';
+  document.getElementById('emp-email-lock').style.display = 'none';
+  document.getElementById('name-suggestions').style.display = 'none';
+  goStep(1);
+}
+
+// ===== EMPLOYEE DATABASE =====
+// Add / edit employees here — { name, no, email }
+const EMPLOYEE_DB = [
+  { name: 'Maleesha Dewangana',     no: '50387', email: 'maleesha.dewangana@carecloud.com' },
+  { name: 'Muhammad Hajmal',         no: '50349', email: 'muhammath.hajmal@carecloud.com' },
+  { name: 'Kasun Saranga',          no: '50416', email: 'kasun.saranga@carecloud.com' },
+  { name: 'Sumedi Aroshini Silva',  no: '50083', email: 'sumedi.silva@carecloud.com' },
+  { name: 'Joseph Shiron Fernando', no: '50156', email: 'joseph.sfernando@carecloud.com' },
+  { name: 'Rangila Thishara Perera',no: '50268', email: 'RANGILA.THISHARA@carecloud.com' },
+  { name: 'Pasindu Rajakaruna',     no: '50307', email: 'pasindu.rajakaruna@carecloud.com' },
+  { name: 'Jeyasekaran Nivendranath', no: '50309', email: 'Jeyasekaran.Nivendranath@carecloud.com' },
+  { name: 'Chandrakumar Havishanth',     no: '50325', email: 'Chandrakumar.Havishanth@carecloud.com' },
+  { name: 'Steffony Jeyaseelan',    no: '50338', email: 'steffony.jeyaseelan@carecloud.com' },
+  { name: 'Vishalini Myilwaganam',  no: '50352', email: 'Myilwaganam.Vishalani@carecloud.com' },
+  { name: 'Pariee Nawarajithan',    no: '50358', email: 'Pariee.Nawarajithan@carecloud.com' },
+  { name: 'Asangi Imalka',       no: '50362', email: 'Asangi.Imalka@carecloud.com' },
+  { name: 'Mervin Joseph Dominic Dilan',       no: '50363', email: 'Joseph.Dilan@carecloud.com' },
+  { name: 'Asanka Weerasekara',     no: '50025', email: 'asanka.weerasekara@carecloud.com' },
+  { name: 'Vijith Shenal',          no: '50024', email: 'vijithw@carecloud.com' },
+  { name: 'Krishan Gunasinghe',     no: '50019', email: 'krishan.gunasinghe@carecloud.com' },
+  { name: 'Suresh Wignarajah',      no: '50012', email: 'sureshw@carecloud.com' },
+  { name: 'Achini Ponnamperuma',    no: '50022', email: 'achini.ponnamperuma@carecloud.com' },
+  { name: 'Mohamed Musharraf',      no: '50361', email: 'mohamed.musharraf@carecloud.com' },
+  { name: 'Mohamed Ziyard',         no: '50004', email: 'mohamed.ziyard@carecloud.com' },
+  { name: 'Pasindu Madushan',       no: '50365', email: 'pasindu.madushan@carecloud.com' },
+  { name: 'Amalenthiran Thushanthan',       no: '50366', email: 'Amalenthiran.Thushanthan@carecloud.com' },
+  { name: 'Yogeshwaran Abilashani',       no: '50368', email: 'Yogeshwaran.Abilashani@carecloud.com' },
+  { name: 'Ravindraraj Sanoha Epzebah',       no: '50370', email: 'Ravindraraj.Epzebah@carecloud.com' },
+  { name: 'Praveen Jayamoorthy',       no: '50376', email: 'Praveen.Jayamoorthy@carecloud.com' },
+  { name: 'Rajendram Vidyaharan',       no: '50389', email: 'Rajendram.Vidyaharan@carecloud.com' },
+  { name: 'Langer Fernando',       no: '50390', email: 'Langer.Fernando@carecloud.com' },
+  { name: 'Buwani Sathi Ratnayake',       no: '50392', email: 'Buwani.Ratnayake@carecloud.com' },
+  { name: 'Malshani Gayathiri',       no: '50393', email: 'Malshani.Gayathiri@carecloud.com' },
+  { name: 'M.J.M. Luqman',       no: '50394', email: 'Luqman.Jawahir@carecloud.com' },
+  { name: 'Ravin Shanka Ranaweera',       no: '50400', email: 'ravin.ranaweera@carecloud.com' },
+  { name: 'Vishalan Sathyabothan',       no: '50406', email: 'Vishalan.Sathyabothan@carecloud.com' },
+  { name: 'Sandunika Pathirana',       no: '50408', email: 'Sandunika.Pathirana@carecloud.com' },
+  { name: 'Navija Sehas',       no: '50414', email: 'navija.sehas@carecloud.com' },
+  { name: 'Raksha Puwaneswaran',       no: '50415', email: 'raksha.puwaneswaran@carecloud.com' },
+  { name: 'Dhanushraj Yogaraj',       no: '50417', email: 'Dhanushraj.Yogaraj@carecloud.com' },
+  { name: 'Ganeshan Neranjan',       no: '50418', email: 'Ganeshan.Neranjan@carecloud.com' },
+  { name: 'Purnima Gimhani',       no: '50421', email: 'Purnima.Gimhani@carecloud.com' },
+  { name: ' Kushni Viraji',       no: '50423', email: 'Kushni.Viraji@carecloud.com' },
+  { name: 'Ishani Lekamge',       no: '50424', email: 'ishani.lekamge@carecloud.com' },
+  { name: 'Rameyan Thurairasa',       no: '50427', email: 'rameyan.thurairasa@carecloud.com' },
+  { name: 'Narthani Shanmuganathan',       no: '50428', email: 'narthani.shanmuganathan@carecloud.com' },
+  { name: ' Swetha Thatchani',       no: '50431', email: 'Swetha.Thatchani@carecloud.com' },
+  { name: 'Anusha Rajaguru',       no: '50434', email: 'anusha.rajaguru@carecloud.com' },
+  { name: 'Sureshkumar Promoth',       no: '50437', email: 'Sureshkumar.Promoth@carecloud.com' },
+
+];
+
+let activeSuggIdx = -1;
+
+function handleNameInput() {
+  const val = document.getElementById('emp-name').value.trim().toLowerCase();
+  const box = document.getElementById('name-suggestions');
+  activeSuggIdx = -1;
+
+  if (val.length < 1) { box.style.display = 'none'; return; }
+
+  const matches = EMPLOYEE_DB.filter(e => e.name.toLowerCase().includes(val));
+  if (!matches.length) { box.style.display = 'none'; return; }
+
+  box.innerHTML = matches.map((e, i) => {
+    const highlighted = e.name.replace(
+      new RegExp(`(${val.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),
+      '<strong style="color:var(--primary)">$1</strong>'
+    );
+    return `<div class="sugg-item" data-idx="${i}"
+      onmousedown="selectEmployee(${EMPLOYEE_DB.indexOf(e)})"
+      onmouseover="highlightSugg(${i})"
+      style="padding:10px 16px;cursor:pointer;font-size:13px;border-bottom:1px solid #f0f4f8;display:flex;align-items:center;gap:12px">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">
+        ${e.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+      </div>
+      <div>
+        <div style="font-weight:600">${highlighted}</div>
+        <div style="font-size:11px;color:var(--muted)">${e.no} &nbsp;·&nbsp; ${e.email}</div>
+      </div>
+    </div>`;
+  }).join('');
+  box.style.display = 'block';
+}
+
+function handleNameKeydown(e) {
+  const box = document.getElementById('name-suggestions');
+  const items = box.querySelectorAll('.sugg-item');
+  if (!items.length) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    activeSuggIdx = Math.min(activeSuggIdx + 1, items.length - 1);
+    highlightSugg(activeSuggIdx);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    activeSuggIdx = Math.max(activeSuggIdx - 1, 0);
+    highlightSugg(activeSuggIdx);
+  } else if (e.key === 'Enter' && activeSuggIdx >= 0) {
+    e.preventDefault();
+    items[activeSuggIdx].dispatchEvent(new MouseEvent('mousedown'));
+  } else if (e.key === 'Escape') {
+    box.style.display = 'none';
+  }
+}
+
+function highlightSugg(idx) {
+  document.querySelectorAll('.sugg-item').forEach((el, i) => {
+    el.style.background = i === idx ? '#f0f7ff' : '';
+  });
+  activeSuggIdx = idx;
+}
+
+function selectEmployee(idx) {
+  const emp = EMPLOYEE_DB[idx];
+  document.getElementById('emp-name').value    = emp.name;
+  document.getElementById('emp-no').value      = emp.no;
+  document.getElementById('emp-email').value   = emp.email;
+  document.getElementById('name-suggestions').style.display = 'none';
+  // Show green tick icons
+  document.getElementById('emp-no-lock').style.display    = '';
+  document.getElementById('emp-email-lock').style.display = '';
+}
+
+// Close suggestions when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('#emp-name') && !e.target.closest('#name-suggestions')) {
+    document.getElementById('name-suggestions').style.display = 'none';
+  }
+});
+
+function toast(msg, type='success') {
+  const area = document.getElementById('toast-area');
+  const el = document.createElement('div');
+  el.className = `toast-msg ${type==='err'?'err':''}`;
+  const icon = type==='err' ? 'fa-exclamation-circle' : 'fa-check-circle';
+  const col = type==='err' ? 'var(--danger)' : 'var(--accent)';
+  el.innerHTML = `<i class="fas ${icon}" style="color:${col};font-size:18px"></i><div><h6>${msg}</h6></div>`;
+  area.appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+</script>
+</body>
+</html>

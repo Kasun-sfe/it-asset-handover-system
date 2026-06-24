@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WFH Request Approval — CareCloud IT</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="unnamed.jpg">
+
+<style>
+:root {
+  --primary: #0f4c81;
+  --primary-light: #1a6db5;
+  --accent: #00c6a7;
+  --accent-dark: #00a389;
+  --danger: #e84545;
+  --warning: #f5a623;
+  --success: #27ae60;
+  --bg: #f0f4f9;
+  --card: #ffffff;
+  --border: #d6e0ed;
+  --text: #1a2233;
+  --muted: #6b7a99;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* HEADER */
+.top-header {
+  background: var(--primary); padding: 0 32px; height: 64px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: 0 2px 16px rgba(15,76,129,.2);
+}
+.brand-logo {
+  width: 38px; height: 38px; background: var(--accent); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 17px; color: #fff; flex-shrink: 0;
+}
+.brand-text h6 { font-size: 14px; font-weight: 700; color: #fff; margin: 0; }
+.brand-text small { font-size: 10.5px; color: rgba(255,255,255,.55); }
+.header-right {
+  margin-left: auto; display: flex; align-items: center; gap: 12px;
+}
+.mgr-chip {
+  background: rgba(255,255,255,.12); color: rgba(255,255,255,.9);
+  border-radius: 20px; padding: 6px 16px; font-size: 12px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,.2); display: flex; align-items: center; gap: 8px;
+}
+.mgr-avatar {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--accent);
+  display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff;
+}
+
+/* HERO */
+.hero-strip {
+  background: linear-gradient(135deg, var(--primary) 0%, #1563a8 100%);
+  padding: 36px 32px 76px; text-align: center; color: #fff;
+}
+.hero-strip .tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,198,167,.18); border: 1px solid rgba(0,198,167,.4);
+  color: #00e8c2; border-radius: 20px; padding: 5px 14px;
+  font-size: 11.5px; font-weight: 600; margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.hero-strip h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.hero-strip p { font-size: 13px; opacity: .7; max-width: 500px; margin: 0 auto; }
+
+/* MAIN CONTENT */
+.content-wrap { max-width: 760px; margin: -40px auto 60px; padding: 0 20px; }
+
+/* REQUEST CARD */
+.req-card {
+  background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(15,76,129,.12); overflow: hidden; margin-bottom: 20px;
+}
+.req-card-header {
+  background: var(--primary); color: #fff; padding: 20px 28px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.req-card-header h5 { margin: 0; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.ref-badge {
+  background: rgba(0,198,167,.25); color: #00e8c2; border-radius: 8px;
+  padding: 4px 12px; font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 700;
+  border: 1px solid rgba(0,198,167,.3);
+}
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700;
+  padding: 5px 14px; border-radius: 20px;
+}
+.badge-pending  { background: #fff3e0; color: #e65100; }
+.badge-approved { background: #e8f5e9; color: #2e7d32; }
+.badge-rejected { background: #fce4ec; color: #c62828; }
+.badge-completed{ background: #e3f2fd; color: #1565c0; }
+
+.req-body { padding: 28px; }
+
+/* SECTION TITLE */
+.section-title {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--primary); margin-bottom: 16px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+}
+
+/* INFO GRID */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+.info-block { }
+.info-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-bottom: 10px; }
+.info-row { display: flex; gap: 8px; padding: 5px 0; border-bottom: 1px solid #f0f4f8; font-size: 13px; }
+.info-row:last-child { border-bottom: none; }
+.info-key { color: var(--muted); width: 120px; flex-shrink: 0; font-size: 12.5px; }
+.info-val { font-weight: 600; }
+
+/* DEVICE TABLE */
+.cc-table { width: 100%; border-collapse: collapse; }
+.cc-table th {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--muted); padding: 10px 14px; background: #f8fafd;
+  border-bottom: 1px solid var(--border); text-align: left;
+}
+.cc-table td {
+  padding: 12px 14px; font-size: 13px; border-bottom: 1px solid #f0f3f8; vertical-align: middle;
+}
+.cc-table tr:last-child td { border-bottom: none; }
+
+/* NOTES BOX */
+.notes-box {
+  background: #f8fafd; border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 18px; font-size: 13px; line-height: 1.6; margin-bottom: 24px;
+}
+
+/* ACK BOX */
+.ack-box {
+  background: #fffbf0; border: 1.5px solid #f5c842; border-radius: 10px;
+  padding: 16px 20px; font-size: 12.5px; color: var(--text); line-height: 1.7;
+  margin-bottom: 24px;
+}
+.ack-box strong { color: var(--primary); }
+
+/* SIGNATURES */
+.sig-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;
+}
+.sig-box {
+  border-top: 1.5px solid var(--border); padding-top: 8px;
+  font-size: 11px; color: var(--muted); text-align: center;
+}
+
+/* ACTION CARD */
+.action-card {
+  background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(15,76,129,.08); padding: 28px; margin-bottom: 20px;
+}
+.action-title {
+  font-size: 15px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+}
+.action-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+.btn-approve {
+  background: var(--success); color: #fff; border: none; padding: 14px 32px;
+  border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: 'Sora', sans-serif; display: inline-flex; align-items: center; gap: 10px;
+  transition: all .2s; width: 100%; justify-content: center; margin-bottom: 12px;
+}
+.btn-approve:hover { background: #219150; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(39,174,96,.3); }
+
+.btn-reject {
+  background: #fff; color: var(--danger); border: 2px solid var(--danger); padding: 13px 32px;
+  border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: 'Sora', sans-serif; display: inline-flex; align-items: center; gap: 10px;
+  transition: all .2s; width: 100%; justify-content: center;
+}
+.btn-reject:hover { background: var(--danger); color: #fff; }
+
+/* REASON TEXTAREA */
+.reason-area {
+  width: 100%; border: 1.5px solid var(--border); border-radius: 9px; padding: 11px 14px;
+  font-size: 13px; font-family: 'Sora', sans-serif; resize: vertical; min-height: 80px;
+  transition: border-color .2s; margin-bottom: 16px;
+}
+.reason-area:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(15,76,129,.1); }
+
+/* RESULT SCREENS */
+.result-screen {
+  background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(15,76,129,.1); padding: 56px 28px; text-align: center;
+}
+.result-icon {
+  width: 86px; height: 86px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px; font-size: 38px;
+}
+.result-screen h3 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.result-screen p { font-size: 13.5px; color: var(--muted); max-width: 420px; margin: 0 auto 20px; }
+.result-ref {
+  display: inline-block; background: #f0f4f9; border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 10px 24px; font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 24px;
+}
+
+/* LOGIN SCREEN */
+.login-screen {
+  max-width: 420px; margin: 60px auto; padding: 0 20px;
+}
+.login-card {
+  background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(15,76,129,.12); overflow: hidden;
+}
+.login-header {
+  background: var(--primary); color: #fff; padding: 28px; text-align: center;
+}
+.login-header h4 { font-size: 18px; font-weight: 700; margin: 10px 0 6px; }
+.login-header p { font-size: 12.5px; opacity: .7; margin: 0; }
+.login-body { padding: 28px; }
+label { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
+.form-control {
+  border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; font-family: 'Sora', sans-serif; transition: border-color .2s; width: 100%;
+}
+.form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15,76,129,.1); outline: none; }
+.btn-login {
+  background: var(--primary); color: #fff; border: none; padding: 12px 24px;
+  border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: 'Sora', sans-serif; width: 100%; margin-top: 4px;
+  transition: all .2s;
+}
+.btn-login:hover { background: var(--primary-light); }
+
+/* ERROR CARD */
+.error-card {
+  background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(15,76,129,.08); padding: 56px 28px; text-align: center;
+}
+
+/* TOAST */
+.toast-area { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+.toast-msg {
+  background: #fff; border-radius: 10px; padding: 14px 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.15); border-left: 4px solid var(--accent);
+  display: flex; align-items: flex-start; gap: 12px; max-width: 320px; animation: slideIn .3s ease;
+}
+.toast-msg.err { border-left-color: var(--danger); }
+.toast-msg h6 { font-size: 13px; font-weight: 600; margin: 0; }
+@keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* DIVIDER */
+.or-divider {
+  display: flex; align-items: center; gap: 12px; margin: 16px 0;
+  font-size: 11.5px; color: var(--muted); font-weight: 600;
+}
+.or-divider::before, .or-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* FOOTER */
+.page-footer {
+  text-align: center; padding: 24px; font-size: 11.5px; color: var(--muted);
+  border-top: 1px solid var(--border); background: var(--card);
+}
+
+/* HIDDEN */
+.hidden { display: none !important; }
+
+@media (max-width: 580px) {
+  .info-grid { grid-template-columns: 1fr; gap: 16px; }
+  .sig-grid { grid-template-columns: 1fr 1fr; }
+  .req-body { padding: 18px 16px; }
+  .action-card { padding: 20px 16px; }
+  .top-header { padding: 0 16px; }
+  .hero-strip { padding: 28px 16px 70px; }
+  .content-wrap { padding: 0 12px; }
+  .req-card-header { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast-area" id="toast-area"></div>
+
+<!-- ===================== HEADER ===================== -->
+<header class="top-header">
+  <div class="brand-logo">CC</div>
+  <div class="brand-text">
+    <h6>CareCloud Colombo(PVT)Ltd</h6>
+    <small>IT Asset Handover System</small>
+  </div>
+  <div class="header-right">
+    <div class="mgr-chip hidden" id="mgr-chip">
+      <div class="mgr-avatar" id="mgr-avatar-txt">M</div>
+      <span id="mgr-chip-name">Manager</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<div class="hero-strip">
+  <div class="tag" id="hero-ref-tag" style="display:none">
+    <i class="fas fa-hashtag"></i><span id="hero-ref-text"></span>
+  </div>
+  <h2><i class="fas fa-clipboard-check me-2" style="color:var(--accent)"></i>WFH Equipment Approval</h2>
+  <p>Review the employee's request and approve or reject it. Your decision will be recorded and the IT team will be notified.</p>
+</div>
+
+<!-- ===================== CONTENT ===================== -->
+<div class="content-wrap">
+
+  <!-- LOGIN SCREEN -->
+  <div id="screen-login" class="login-screen" style="max-width:420px;margin:-40px auto 60px;">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-logo" style="margin:0 auto 12px;width:44px;height:44px;font-size:20px">CC</div>
+        <h4>Manager Portal</h4>
+        <p>Sign in to review &amp; approve WFH equipment requests</p>
+      </div>
+      <div class="login-body">
+        <div id="login-error" class="hidden" style="background:#fce4ec;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#c62828;margin-bottom:16px">
+          <i class="fas fa-exclamation-circle me-2"></i><span id="login-error-msg">Invalid credentials.</span>
+        </div>
+        <div style="margin-bottom:14px">
+          <label>Your Name</label>
+          <select class="form-control" id="login-name">
+            <option value="">Select Your Manager</option>
+            <option data-email="vijithw@carecloud.com">Vijith Shenal</option>
+              <option data-email="krishan.gunasinghe@carecloud.com">Krishan Gunasinghe</option>
+              <option data-email="Sureshw@carecloud.com">Suresh Wignarajah</option>
+              <option data-email="achini.ponnamperuma@carecloud.com">Achini Ponnamperuma</option>
+              <option data-email="steffony.jeyaseelan@carecloud.com">Steffony Jeyaseelan</option>
+              <option data-email="Mohamed.Musharraf@carecloud.com">Mohamed Musharraf</option>
+              <option data-email="mohamed.ziyard@carecloud.com">Mohamed Ziyard</option>
+              <option data-email="asanka.weerasekara@carecloud.com">Asanka Weerasekara</option>
+              <option data-email="Pasindu.Madushan@carecloud.com">Pasindu Madushan</option>
+              <option data-email="Muhammath.Hajmal@carecloud.com">Muhammath Hajmal</option>
+                       
+            </select>
+        </div>
+        <div style="margin-bottom:20px">
+          <label>Password</label>
+          <input type="password" class="form-control" id="login-pass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()">
+          <div style="font-size:11px;color:var(--muted);margin-top:5px"><i class="fas fa-info-circle me-1"></i>Demo password: <strong>manager123</strong></div>
+        </div>
+        <button class="btn-login" onclick="doLogin()"><i class="fas fa-sign-in-alt me-2"></i>Sign In to Review Request</button>
+
+        <div class="or-divider">or access via link</div>
+        <div style="background:#f0f4f9;border-radius:9px;padding:12px 14px;font-size:12px;color:var(--muted);text-align:center">
+          <i class="fas fa-envelope me-1"></i> Open the <strong>link sent to your email</strong> to auto-login and view the request directly.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NO REQUEST / ERROR SCREEN -->
+  <div id="screen-error" class="error-card hidden">
+    <div style="font-size:48px;margin-bottom:16px;opacity:.3">🔍</div>
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Request Not Found</h3>
+    <p style="font-size:13px;color:var(--muted);max-width:360px;margin:0 auto 20px">The request reference in the link is invalid or has already been processed. Please contact the IT team.</p>
+    <div style="font-size:12px;color:var(--muted)"><i class="fas fa-envelope me-1"></i>itteamcmb@carecloud.com</div>
+  </div>
+
+  <!-- NOT YOUR REQUEST SCREEN -->
+  <div id="screen-wrong-mgr" class="error-card hidden">
+    <div style="font-size:48px;margin-bottom:16px">🔒</div>
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Access Restricted</h3>
+    <p style="font-size:13px;color:var(--muted);max-width:380px;margin:0 auto 20px">This request is assigned to a different manager. Please sign in with the correct account or contact the IT team.</p>
+    <button class="btn-login" style="max-width:220px;margin:0 auto;display:block" onclick="logout()"><i class="fas fa-sign-in-alt me-2"></i>Switch Account</button>
+  </div>
+
+  <!-- MAIN APPROVAL SCREEN -->
+  <div id="screen-approval" class="hidden">
+
+    <!-- REQUEST DETAILS CARD -->
+    <div class="req-card">
+      <div class="req-card-header">
+        <h5>
+          <i class="fas fa-file-alt"></i>
+          WFH Equipment Request
+          <span class="ref-badge" id="detail-ref">—</span>
+        </h5>
+        <span class="status-badge" id="detail-status-badge">⏳ Pending</span>
+      </div>
+      <div class="req-body">
+
+        <div class="info-grid">
+          <div class="info-block">
+            <div class="info-label"><i class="fas fa-user me-1"></i>Employee Details</div>
+            <div class="info-row"><span class="info-key">Full Name</span><span class="info-val" id="d-name">—</span></div>
+            <div class="info-row"><span class="info-key">Employee No</span><span class="info-val" id="d-no">—</span></div>
+            <div class="info-row"><span class="info-key">Email</span><span class="info-val" id="d-email" style="font-size:12px">—</span></div>
+            <div class="info-row"><span class="info-key">Department</span><span class="info-val" id="d-dept">—</span></div>
+            <div class="info-row"><span class="info-key">WFH Start Date</span><span class="info-val" id="d-date">—</span></div>
+            <div class="info-row"><span class="info-key">Handover By</span><span class="info-val" id="d-hby">—</span></div>
+          </div>
+          <div class="info-block">
+            <div class="info-label"><i class="fas fa-calendar-alt me-1"></i>Request Info</div>
+            <div class="info-row"><span class="info-key">Reference</span><span class="info-val" id="d-ref" style="font-family:'JetBrains Mono',monospace">—</span></div>
+            <div class="info-row"><span class="info-key">Submitted</span><span class="info-val" id="d-submitted" style="font-size:12px">—</span></div>
+            <div class="info-row"><span class="info-key">Manager</span><span class="info-val" id="d-mgr">—</span></div>
+            <div class="info-row"><span class="info-key">Status</span><span id="d-status-inline">—</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">Requested Equipment</div>
+        <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px">
+          <table class="cc-table">
+            <thead>
+              <tr><th>#</th><th>Item</th><th>Serial No</th><th style="text-align:center">Handover ✓</th><th style="text-align:center">Return ✓</th></tr>
+            </thead>
+            <tbody id="device-table-body">
+              <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="notes-section" class="hidden">
+          <div class="section-title">Notes from Employee</div>
+          <div class="notes-box" id="d-notes">—</div>
+        </div>
+
+        <div class="section-title">Acknowledgement</div>
+        <div class="ack-box">
+          <i class="fas fa-file-signature me-2" style="color:var(--warning)"></i>
+          I hereby acknowledge that I have received the above-mentioned equipment. I understand that this is the property of
+          <strong>CareCloud Colombo (PVT) Ltd</strong> and assure that I will take care of the equipment to the best possible extent.
+        </div>
+        <div class="sig-grid">
+          <div class="sig-box">Employee Signature</div>
+          <div class="sig-box">IT Dept. (In Charge)</div>
+          <div class="sig-box">Supervisor / Manager</div>
+          <div class="sig-box">Date: <span id="d-sig-date">—</span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ALREADY DECIDED BANNER -->
+    <div id="already-decided" class="hidden">
+      <div class="result-screen">
+        <div class="result-icon" id="decided-icon" style="background:#e8f5e9;color:var(--success)"><i class="fas fa-check-circle"></i></div>
+        <h3 id="decided-title">Already Approved</h3>
+        <p id="decided-msg">This request has already been processed.</p>
+        <div class="result-ref" id="decided-ref">—</div>
+        <div style="font-size:12.5px;color:var(--muted)"><i class="fas fa-envelope me-1"></i>For questions contact IT: <strong>itteamcmb@carecloud.com</strong></div>
+      </div>
+    </div>
+
+    <!-- ACTION CARD (only shown when pending) -->
+    <div id="action-card" class="action-card">
+      <div class="action-title">
+        <span style="width:36px;height:36px;background:#fff3e0;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;color:var(--warning);font-size:18px;flex-shrink:0"><i class="fas fa-gavel"></i></span>
+        Your Decision
+      </div>
+      <div class="action-subtitle">Review the request above and approve or reject it. Add a note to the employee if needed.</div>
+
+      <div style="margin-bottom:16px">
+        <label style="margin-bottom:6px">Remarks / Reason <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+        <textarea class="reason-area" id="mgr-remarks" placeholder="e.g. Approved. Please coordinate with IT to collect equipment on the start date.&#10;or&#10;Rejected. Please discuss with your team lead first."></textarea>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <button class="btn-approve" onclick="makeDecision('approved')">
+            <i class="fas fa-check-circle"></i> Approve Request
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button class="btn-reject" onclick="makeDecision('rejected')">
+            <i class="fas fa-times-circle"></i> Reject Request
+          </button>
+        </div>
+      </div>
+
+      <div style="font-size:11.5px;color:var(--muted);margin-top:14px;text-align:center">
+        <i class="fas fa-lock me-1"></i>Your decision will be logged and emailed to the employee and IT team.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DECISION DONE SCREENS -->
+  <div id="screen-approved" class="hidden">
+    <div class="result-screen">
+      <div class="result-icon" style="background:#e8f5e9;color:var(--success)"><i class="fas fa-check-circle"></i></div>
+      <h3 style="color:var(--success)">Request Approved!</h3>
+      <p>You have approved this WFH equipment request. The IT team has been notified and will prepare the equipment for handover.</p>
+      <div class="result-ref" id="approved-ref">—</div>
+      <div style="background:#f0fdf9;border:1.5px solid var(--accent);border-radius:10px;padding:16px 20px;max-width:400px;margin:0 auto 20px;font-size:12.5px;text-align:left">
+        <div style="font-weight:700;color:var(--primary);margin-bottom:10px"><i class="fas fa-list-check me-2"></i>What happens next?</div>
+        <div style="display:flex;flex-direction:column;gap:8px;color:var(--muted)">
+          <div><span style="color:var(--accent);font-weight:700">✔</span> Approval email sent to employee</div>
+          <div><span style="color:var(--accent);font-weight:700">✔</span> IT team notified to prepare equipment</div>
+          <div><span style="color:var(--accent);font-weight:700">✔</span> Handover scheduled for WFH start date</div>
+        </div>
+      </div>
+      <div style="font-size:12.5px;color:var(--muted)"><i class="fas fa-envelope me-1"></i>For questions: <strong>itteamcmb@carecloud.com</strong></div>
+    </div>
+  </div>
+
+  <div id="screen-rejected" class="hidden">
+    <div class="result-screen">
+      <div class="result-icon" style="background:#fce4ec;color:var(--danger)"><i class="fas fa-times-circle"></i></div>
+      <h3 style="color:var(--danger)">Request Rejected</h3>
+      <p>You have rejected this WFH equipment request. The employee and IT team have been notified.</p>
+      <div class="result-ref" id="rejected-ref">—</div>
+      <div style="font-size:12.5px;color:var(--muted)"><i class="fas fa-envelope me-1"></i>For questions: <strong>itteamcmb@carecloud.com</strong></div>
+    </div>
+  </div>
+
+</div><!-- /content-wrap -->
+
+<footer class="page-footer">
+  <i class="fas fa-shield-alt me-1"></i> CareCloud (PVT) Ltd — IT Department &nbsp;|&nbsp; <strong>itteamcmb@carecloud.com</strong>
+</footer>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script>
+// ===================================================
+//  MANAGER LIST — same as in admin & user form
+// ===================================================
+const MANAGERS = [
+  { name: 'Vijith Shenal',  email: 'vijithw@carecloud.com'  },
+  { name: 'Krishan Gunasinghe', email: 'krishan.gunasinghe@carecloud.com' },
+  { name: 'Suresh Wignarajah',    email: 'Sureshw@carecloud.com'  },
+  { name: 'Achini Ponnamperuma',    email: 'achini.ponnamperuma@carecloud.com' },
+  { name: 'Mohamed Musharraf',  email: 'Mohamed.Musharraf@carecloud.com'  },
+  { name: 'Mohamed Ziyard',  email: 'mohamed.ziyard@carecloud.com'  },
+  { name: 'Asanka Weerasekara',  email: 'asanka.weerasekara@carecloud.com'  },
+  { name: 'Pasindu Madushan',  email: 'Pasindu.Madushan@carecloud.com'  },
+  { name: 'Muhammath Hajmal',  email: 'Muhammath.Hajmal@carecloud.com'  },
+  
+];
+
+const DEMO_PASSWORD = 'manager123';
+
+// ===================================================
+//  STATE
+// ===================================================
+let currentMgr = null;   // { name, email }
+let currentReq = null;   // request object
+
+// ===================================================
+//  BOOT — read URL params
+// ===================================================
+const params = new URLSearchParams(window.location.search);
+const urlRef   = params.get('ref');    // e.g. REQ-882445
+const urlToken = params.get('token');  // manager email token (base64)
+
+// If token present in URL → try auto-login
+if (urlToken) {
+  try {
+    const decoded = atob(urlToken);
+    const mgr = MANAGERS.find(m => m.email === decoded);
+    if (mgr) {
+      currentMgr = mgr;
+      sessionStorage.setItem('cc_mgr', JSON.stringify(mgr));
+    }
+  } catch(e) {}
+}
+
+// Check session (already logged in)
+if (!currentMgr) {
+  const sess = sessionStorage.getItem('cc_mgr');
+  if (sess) {
+    try { currentMgr = JSON.parse(sess); } catch(e) {}
+  }
+}
+
+// ===================================================
+//  INIT
+// ===================================================
+function init() {
+  if (!currentMgr) {
+    // Show login
+    showScreen('login');
+    // If there's a ref in URL, pre-fill hint
+    if (urlRef) {
+      document.getElementById('hero-ref-tag').style.display = 'inline-flex';
+      document.getElementById('hero-ref-text').textContent = urlRef;
+    }
+    return;
+  }
+
+  // Logged in → show chip
+  updateMgrChip();
+
+  if (!urlRef) {
+    // No ref → show all pending for this manager
+    showAllPending();
+    return;
+  }
+
+  // Load specific request
+  loadRequest(urlRef);
+}
+
+// ===================================================
+//  LOGIN
+// ===================================================
+function doLogin() {
+  const sel  = document.getElementById('login-name');
+  const pass = document.getElementById('login-pass').value.trim();
+  const opt  = sel.options[sel.selectedIndex];
+
+  if (!opt.value) { showLoginError('Please select your name.'); return; }
+  if (pass !== DEMO_PASSWORD) { showLoginError('Incorrect password. (Demo: manager123)'); return; }
+
+  const mgr = MANAGERS.find(m => m.name === opt.value);
+  if (!mgr) { showLoginError('Manager not found.'); return; }
+
+  currentMgr = mgr;
+  sessionStorage.setItem('cc_mgr', JSON.stringify(mgr));
+  hideLoginError();
+  init();
+}
+
+function showLoginError(msg) {
+  document.getElementById('login-error').classList.remove('hidden');
+  document.getElementById('login-error-msg').textContent = msg;
+}
+function hideLoginError() {
+  document.getElementById('login-error').classList.add('hidden');
+}
+
+function logout() {
+  sessionStorage.removeItem('cc_mgr');
+  currentMgr = null;
+  currentReq = null;
+  showScreen('login');
+}
+
+function updateMgrChip() {
+  if (!currentMgr) return;
+  document.getElementById('mgr-chip').classList.remove('hidden');
+  document.getElementById('mgr-chip-name').textContent = currentMgr.name;
+  document.getElementById('mgr-avatar-txt').textContent = currentMgr.name.split(' ').map(w=>w[0]).join('').slice(0,2);
+}
+
+// ===================================================
+//  LOAD REQUEST
+// ===================================================
+function loadRequest(ref) {
+  API.getRequests().then(reqs => {
+    const r = reqs.find(x => x.ref === ref);
+    if (!r) { showScreen('error'); return; }
+    if (r.mgrEmail !== currentMgr.email) { showScreen('wrong-mgr'); return; }
+    currentReq = r;
+    _populateRequest(r, ref);
+  }).catch(() => {
+    showScreen('error');
+    document.getElementById('screen-error').innerHTML = `
+      <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Cannot Connect to Server</h3>
+      <p style="font-size:13px;color:var(--muted);max-width:360px;margin:0 auto 20px">
+        Make sure the CareCloud backend server is running.<br>
+        <code style="font-size:12px">node server.js</code>
+      </p>
+      <div style="font-size:12px;color:var(--muted)"><i class="fas fa-envelope me-1"></i>itsupportcmb@carecloud.com</div>`;
+  });
+}
+
+function _populateRequest(r, ref) {
+  // Show hero ref
+  document.getElementById('hero-ref-tag').style.display = 'inline-flex';
+  document.getElementById('hero-ref-text').textContent = ref;
+
+  // Populate fields
+  document.getElementById('detail-ref').textContent = r.ref;
+  document.getElementById('d-ref').textContent = r.ref;
+  document.getElementById('d-name').textContent = r.name;
+  document.getElementById('d-no').textContent = r.no;
+  document.getElementById('d-email').textContent = r.email;
+  document.getElementById('d-dept').textContent = r.dept;
+  document.getElementById('d-date').textContent = r.date;
+  document.getElementById('d-hby').textContent = r.hby;
+  document.getElementById('d-submitted').textContent = fmtDate(r.submitted);
+  document.getElementById('d-mgr').textContent = r.mgr;
+  document.getElementById('d-sig-date').textContent = r.date;
+
+  // Status
+  const statusMap = {pending:'⏳ Pending',approved:'✅ Approved',completed:'📦 Completed',rejected:'❌ Rejected',returned:'↩️ Returned'};
+  const badgeMap  = {pending:'badge-pending',approved:'badge-approved',completed:'badge-completed',rejected:'badge-rejected',returned:'badge-returned'};
+  const statusText = statusMap[r.status] || r.status;
+  document.getElementById('detail-status-badge').textContent = statusText;
+  document.getElementById('detail-status-badge').className = `status-badge ${badgeMap[r.status]||'badge-pending'}`;
+  document.getElementById('d-status-inline').innerHTML = `<span class="status-badge ${badgeMap[r.status]||'badge-pending'}" style="padding:3px 10px;font-size:11.5px">${statusText}</span>`;
+
+  // Devices
+  const devEntries = Object.entries(r.devices);
+  document.getElementById('device-table-body').innerHTML = devEntries.map(([k,v],i) => `
+    <tr>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--muted);font-weight:700">${String(i+1).padStart(2,'0')}</td>
+      <td style="font-weight:600">${k}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">${v||'—'}</td>
+      <td style="text-align:center"><i class="fas fa-square" style="color:var(--border);font-size:14px"></i></td>
+      <td style="text-align:center"><i class="fas fa-square" style="color:var(--border);font-size:14px"></i></td>
+    </tr>`).join('');
+
+  // Notes
+  if (r.notes) {
+    document.getElementById('notes-section').classList.remove('hidden');
+    document.getElementById('d-notes').textContent = r.notes;
+  }
+
+  showScreen('approval');
+
+  // If already decided, hide action card and show banner
+  if (r.status !== 'pending') {
+    document.getElementById('action-card').classList.add('hidden');
+    const dec   = document.getElementById('already-decided');
+    dec.classList.remove('hidden');
+    const icon  = document.getElementById('decided-icon');
+    const title = document.getElementById('decided-title');
+    const msg   = document.getElementById('decided-msg');
+    const dref  = document.getElementById('decided-ref');
+    dref.textContent = r.ref;
+    if (['approved','completed','returned'].includes(r.status)) {
+      icon.style.cssText = 'background:#e8f5e9;color:var(--success)';
+      icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+      title.textContent = 'Already Approved';
+      msg.textContent = 'This request was approved and the IT team has been notified.';
+    } else {
+      icon.style.cssText = 'background:#fce4ec;color:var(--danger)';
+      icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+      title.textContent = 'Already Rejected';
+      msg.textContent = 'This request was previously rejected.';
+    }
+  }
+}
+
+// ===================================================
+//  SHOW ALL PENDING (no ref in URL)
+// ===================================================
+function showAllPending() {
+  API.getRequests().then(reqs => {
+    const myPending = reqs.filter(r => r.mgrEmail === currentMgr.email && r.status === 'pending');
+    if (myPending.length === 0) {
+      document.getElementById('screen-error').classList.remove('hidden');
+      document.getElementById('screen-error').innerHTML = `
+        <div style="font-size:48px;margin-bottom:16px">🎉</div>
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">All Clear, ${currentMgr.name.split(' ')[0]}!</h3>
+        <p style="font-size:13px;color:var(--muted);max-width:360px;margin:0 auto 20px">You have no pending WFH equipment requests to approve.</p>
+        <div style="font-size:12px;color:var(--muted)"><i class="fas fa-envelope me-1"></i>itsupportcmb@carecloud.com</div>`;
+      showScreen('error'); return;
+    }
+    if (myPending.length === 1) { loadRequest(myPending[0].ref); return; }
+    document.querySelector('.content-wrap').innerHTML = `
+      <div class="req-card" style="margin-top:0">
+        <div class="req-card-header">
+          <h5><i class="fas fa-clock me-2"></i>Pending Requests for You</h5>
+          <span class="ref-badge">${myPending.length} pending</span>
+        </div>
+        <div class="req-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:20px">You have ${myPending.length} pending WFH requests waiting for your approval.</p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            ${myPending.map(r => `
+              <div style="border:1.5px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer;transition:all .2s"
+                   onmouseover="this.style.borderColor='var(--primary)';this.style.background='#f7fbff'"
+                   onmouseout="this.style.borderColor='var(--border)';this.style.background=''"
+                   onclick="window.location.href='?ref=${r.ref}'">
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--primary);font-weight:700;margin-bottom:4px">${r.ref}</div>
+                  <div style="font-weight:700;font-size:14px">${r.name}</div>
+                  <div style="font-size:12px;color:var(--muted)">${r.dept} · ${Object.keys(r.devices).length} item(s) · ${r.date}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="status-badge badge-pending">⏳ Pending</span>
+                  <i class="fas fa-chevron-right" style="color:var(--muted)"></i>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+// ===================================================
+//  API
+// ===================================================
+const API_BASE = `${window.location.protocol}//${window.location.hostname}:3000/api`;
+const API = {
+  async getRequests()       { const d=await(await fetch(`${API_BASE}/data`)).json(); return d.requests||[]; },
+  async updateRequest(ref,u){ return fetch(`${API_BASE}/requests/${encodeURIComponent(ref)}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(u)}); },
+  async addActivity(msg,type){ return fetch(`${API_BASE}/activities`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({msg,type,time:new Date().toISOString()})}); },
+};
+
+// ===================================================
+//  EMAIL BUILDERS
+// ===================================================
+function buildApprovedEmail(r, remarks) {
+  return `
+  <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:620px;margin:0 auto;background:#f0f4f9;padding:24px">
+    <div style="background:#0f4c81;border-radius:12px 12px 0 0;padding:28px 32px;display:flex;align-items:center;gap:14px">
+      <div style="background:#00c6a7;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0">CC</div>
+      <div style="color:#fff;font-weight:700;font-size:16px">CareCloud Colombo (PVT) Ltd</div>
+    </div>
+    <div style="background:#fff;padding:32px;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(15,76,129,.08)">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="width:64px;height:64px;background:#e8f5e9;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px">✅</div>
+        <h2 style="font-size:20px;font-weight:700;color:#27ae60;margin:0 0 6px">Your Request Has Been Approved!</h2>
+        <p style="color:#6b7a99;font-size:13.5px;margin:0">Hi <strong>${r.name}</strong>, great news — your manager has approved your WFH equipment request.</p>
+      </div>
+      <div style="background:#f0f4f9;border-radius:10px;padding:14px 20px;text-align:center;margin-bottom:24px">
+        <div style="font-size:11px;color:#6b7a99;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:4px">Reference Number</div>
+        <div style="font-size:20px;font-weight:800;color:#0f4c81;font-family:monospace">${r.ref}</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px">
+        <tr style="background:#f8fafd"><td colspan="2" style="padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f4c81;border-bottom:2px solid #00c6a7">Approval Details</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;width:140px;border-bottom:1px solid #f0f4f8">Approved By</td><td style="padding:9px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #f0f4f8">${r.mgr}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">WFH Start Date</td><td style="padding:9px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #f0f4f8">${r.date}</td></tr>
+        <tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px;border-bottom:1px solid #f0f4f8">Equipment</td><td style="padding:9px 14px;font-size:13px;border-bottom:1px solid #f0f4f8">${Object.keys(r.devices).join(', ')}</td></tr>
+        ${remarks ? `<tr><td style="padding:9px 14px;color:#6b7a99;font-size:13px">Remarks</td><td style="padding:9px 14px;font-size:13px;font-style:italic">${remarks}</td></tr>` : ''}
+      </table>
+      <div style="background:#f0fdf9;border:1.5px solid #00c6a7;border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:13px;color:#1a2233">
+        <strong>Next Steps:</strong> The IT team has been notified and will prepare your equipment. Please coordinate with <strong>${r.hby || 'the IT team'}</strong> to collect your equipment on your WFH start date.
+      </div>
+      <p style="font-size:11.5px;color:#6b7a99;margin:0;text-align:center">CareCloud Colombo (PVT) Ltd — IT Department &nbsp;|&nbsp;  itteamcmb@carecloud.com</p>
+    </div>
+  </div>`;
+}
+
+function buildRejectedEmail(r, reason) {
+  return `
+  <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:620px;margin:0 auto;background:#f0f4f9;padding:24px">
+    <div style="background:#0f4c81;border-radius:12px 12px 0 0;padding:28px 32px;display:flex;align-items:center;gap:14px">
+      <div style="background:#00c6a7;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0">CC</div>
+      <div style="color:#fff;font-weight:700;font-size:16px">CareCloud Colombo (PVT) Ltd</div>
+    </div>
+    <div style="background:#fff;padding:32px;border-radius:0 0 12px 12px;box-shadow:0 4px 20px rgba(15,76,129,.08)">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="width:64px;height:64px;background:#fce4ec;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px">❌</div>
+        <h2 style="font-size:20px;font-weight:700;color:#c62828;margin:0 0 6px">Request Not Approved</h2>
+        <p style="color:#6b7a99;font-size:13.5px;margin:0">Hi <strong>${r.name}</strong>, your manager has reviewed and declined your WFH equipment request.</p>
+      </div>
+      <div style="background:#f0f4f9;border-radius:10px;padding:14px 20px;text-align:center;margin-bottom:24px">
+        <div style="font-size:11px;color:#6b7a99;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:4px">Reference Number</div>
+        <div style="font-size:20px;font-weight:800;color:#0f4c81;font-family:monospace">${r.ref}</div>
+      </div>
+      ${reason ? `<div style="background:#fff3e0;border-left:4px solid #f5a623;border-radius:6px;padding:14px 18px;margin-bottom:24px;font-size:13px;color:#7a5c00"><strong>Reason / Remarks:</strong> ${reason}</div>` : ''}
+      <div style="background:#f8fafd;border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:13px;color:#6b7a99">
+        If you have questions, please speak with your manager <strong style="color:#1a2233">${r.mgr}</strong> or contact the IT team.
+      </div>
+      <p style="font-size:11.5px;color:#6b7a99;margin:0;text-align:center">CareCloud Colombo (PVT) Ltd — IT Department &nbsp;|&nbsp;  itteamcmb@carecloud.com</p>
+    </div>
+  </div>`;
+}
+
+// ===================================================
+//  MAKE DECISION
+// ===================================================
+async function makeDecision(decision) {
+  if (!currentReq) return;
+
+  const confirmMsg = decision === 'approved'
+    ? `Approve this request for ${currentReq.name}?`
+    : `Reject this request for ${currentReq.name}?`;
+
+  if (!confirm(confirmMsg)) return;
+
+  document.querySelectorAll('.btn-approve,.btn-reject').forEach(b => b.disabled = true);
+
+  const remarks = document.getElementById('mgr-remarks').value.trim();
+
+  try {
+    const updates = {
+      status: decision,
+      mgrRemarks: remarks,
+      approvedBy: currentMgr?.name || 'Manager'
+    };
+
+    if (decision === 'approved') {
+      updates.approvedAt = new Date().toISOString();
+    } else {
+      updates.rejectedAt = new Date().toISOString();
+      updates.rejectionReason = remarks || 'No reason provided';
+    }
+
+    // Update DB
+    const response = await fetch(`${API_BASE}/requests/${encodeURIComponent(currentReq.ref)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates)
+    });
+    if (!response.ok) throw new Error('Failed to update request');
+
+    // Log activity
+    await fetch(`${API_BASE}/activities`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        msg: `Request ${currentReq.ref} (${currentReq.name}) ${decision === 'approved' ? 'APPROVED' : 'REJECTED'} by ${currentMgr.name}`,
+        type: decision,
+        time: new Date().toISOString()
+      })
+    });
+
+    // Send email to employee
+    const emailHtml = decision === 'approved'
+      ? buildApprovedEmail(currentReq, remarks)
+      : buildRejectedEmail(currentReq, remarks);
+    const emailSubject = decision === 'approved'
+      ? `✅ Your WFH Request Approved — ${currentReq.ref}`
+      : `Your WFH Request Was Not Approved — ${currentReq.ref}`;
+
+    await fetch(`${API_BASE}/sendmail`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to: currentReq.email, subject: emailSubject, html: emailHtml })
+    });
+
+    // Show result screen
+    hideAllScreens();
+    if (decision === 'approved') {
+      document.getElementById('approved-ref').textContent = currentReq.ref;
+      document.getElementById('screen-approved').classList.remove('hidden');
+      toast(`✅ Request ${currentReq.ref} approved! Employee notified.`);
+    } else {
+      document.getElementById('rejected-ref').textContent = currentReq.ref;
+      document.getElementById('screen-rejected').classList.remove('hidden');
+      toast(`Request ${currentReq.ref} rejected. Employee notified.`, 'err');
+    }
+    window.scrollTo({top: 0, behavior: 'smooth'});
+
+  } catch(err) {
+    console.error('Decision error:', err);
+    document.querySelectorAll('.btn-approve,.btn-reject').forEach(b => b.disabled = false);
+    toast('Error processing decision. Please try again.', 'err');
+  }
+}
+
+// ===================================================
+//  SCREEN HELPERS
+// ===================================================
+const SCREENS = ['login','error','wrong-mgr','approval','approved','rejected'];
+
+function showScreen(name) {
+  hideAllScreens();
+  const el = document.getElementById(`screen-${name}`);
+  if (el) el.classList.remove('hidden');
+}
+
+function hideAllScreens() {
+  SCREENS.forEach(s => {
+    const el = document.getElementById(`screen-${s}`);
+    if (el) el.classList.add('hidden');
+  });
+}
+
+// ===================================================
+//  HELPERS
+// ===================================================
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) + ' ' +
+         d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+
+function toast(msg, type='success') {
+  const area = document.getElementById('toast-area');
+  const el = document.createElement('div');
+  el.className = `toast-msg ${type==='err'?'err':''}`;
+  const icon = type==='err' ? 'fa-exclamation-circle' : 'fa-check-circle';
+  const col  = type==='err' ? 'var(--danger)' : 'var(--accent)';
+  el.innerHTML = `<i class="fas ${icon}" style="color:${col};font-size:18px"></i><div><h6>${msg}</h6></div>`;
+  area.appendChild(el);
+  setTimeout(() => el.remove(), 5000);
+}
+
+// ===================================================
+//  BOOT
+// ===================================================
+init();
+</script>
+</body>
+</html>
